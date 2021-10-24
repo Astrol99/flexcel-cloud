@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import $ from 'jquery';
 import './../../../styling/Flow.css';
-import Tabs from 'react-bootstrap/Tabs'
-import Tab from 'react-bootstrap/Tab'
+import Tabs from "react-draggable-tabs";
 import FlexcelFlow from '@handsontable/react';
 import RenameModal from './../modals/RenameModal'
 import DeleteTabWarningModal from './../modals/DeleteTabWarningModal'
@@ -100,8 +99,8 @@ export default class FlowNavigation extends Component {
     setFlowHeightAndWidth = () => {
         // Error checking needed? Will .nav only return one component?
         var flowNavigationContainerHeight = $('#flowNavigationContainer').height()
-        var navTabHeight = $('#flowNavigationContainer .nav').height()
-        var newFlowWidth = $('#flowNavigationContainer .nav').width()
+        var navTabHeight = $('.react-tabs-container').height()
+        var newFlowWidth = $('.react-tabs-container').width()
         var newFlowHeight = flowNavigationContainerHeight - navTabHeight
         this.setState({
             flowSettings: {
@@ -350,23 +349,37 @@ export default class FlowNavigation extends Component {
     }
 
     render() {
+        const tabs = this.state.flowTabNames.map((value, index) => {
+            return (
+                {
+                    id: index + 1,
+                    content: value,
+                    active: this.state.currentFlowTabIndex === index ? true : false,
+                    display: (
+                        <div id='flowcontainer'>
+                            <FlexcelFlow
+                                ref={this.state.handsontableFlows[index]}
+                                data={this.state.flowsData[index]}
+                                settings={this.state.flowSettings}
+                            >
+                            </FlexcelFlow>
+                        </div>
+                    )
+                }
+            )
+        })
+
         return (
             <div>
                 {/* Sets up flow navigation tabs */}
-                <Tabs justify variant='pills' activeKey={('tab-' + this.state.currentFlowTabIndex)} onSelect={(key) => this.onTabSelect(key)}>
-                    {
-                        this.state.flowTabNames.map((value, index) => {
-                            return (
-                                <Tab eventKey={('tab-' + index)} title={value}>
-                                    <div id='flowContainer'>
-                                        <FlexcelFlow ref={this.state.handsontableFlows[index]} data={this.state.flowsData[index]} settings={this.state.flowSettings} />
-                                    </div>
-                                </Tab>
-                            )
-                        })
-                    }
+                <Tabs
+                    tabs={tabs}
+                >
                 </Tabs>
-
+                
+                {/* Display content of current tab */}
+                {tabs[this.state.currentFlowTabIndex].display}
+                
                 {/* Modals */}
 
                 {/* Rename Modal */}
