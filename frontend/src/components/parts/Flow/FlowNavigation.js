@@ -3,7 +3,6 @@ import $ from 'jquery';
 import './../../../styling/Flow.css';
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
-import Handsontable from 'handsontable';
 import FlexcelFlow from '@handsontable/react';
 import RenameModal from './../modals/RenameModal'
 import DeleteTabWarningModal from './../modals/DeleteTabWarningModal'
@@ -328,6 +327,8 @@ export default class FlowNavigation extends Component {
                             showTabRenameModal: true
                         })
                         event.preventDefault()
+                        break
+                    default:
                         break
                 }
             }

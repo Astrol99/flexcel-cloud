@@ -101,6 +101,8 @@ export default class SpeechDoc extends Component {
           })
           event.preventDefault()
           break
+          default:
+            break
         }
       }
     }
